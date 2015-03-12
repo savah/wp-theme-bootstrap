@@ -5,26 +5,31 @@
  */
 class DebouncedResize {
   constructor() {
-    window.addEventListener('resize', this.resize);
-    this.callbacks = [];
-    this.running = false;
-  }
+		var self = this;
 
-  resize() {
-    if (!this.running) {
-      this.running = true;
-      window.requestAnimationFrame(() => {
-        this.callbacks.foreach(cb => cb());
-        this.running = false;
-      });
-    }
-  }
+    window.addEventListener('resize', self.resize);
+    self.callbacks = [];
+    self.running = false;
 
-  add(cb) {
-    if ('function' !== typeof cb) {
-      throw "DebouncedResize: registered callback must be callable";
-    }
-    return this.callbacks.push(cb);
+		self.resize = resize;
+		self.add    = add;
+
+		function resize() {
+			if (!self.running) {
+				self.running = true;
+				window.requestAnimationFrame(() => {
+					self.callbacks.foreach(cb => cb());
+					self.running = false;
+				});
+			}
+		}
+
+		function add(cb) {
+			if ('function' !== typeof cb) {
+				throw "DebouncedResize: registered callback must be callable";
+			}
+			return self.callbacks.push(cb);
+		}
   }
 }
 

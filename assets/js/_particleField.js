@@ -9,34 +9,109 @@ var Particle = require('./_particle');
  * @license MIT
  */
 class ParticleField {
+	/**
+	 * If the epicness level
+	 * is not over 9000... then
+	 * go home!
+	 *
+	 * just a demo of a static
+	 * function
+	 *
+	 * @param container
+	 * @returns {boolean}
+	 */
   static epicnessHighEnough(container) {
     return container.dataset.epicnessLevel > 9000;
   }
 
+
+	/**
+	 * Kick off the particle field
+	 * if it's allowed...
+	 *
+	 * @param container
+	 */
   constructor(container) {
+		var self = this;
     if (!ParticleField.epicnessHighEnough(container)) {
-      throw "Failed to initialize fairy field: Epicness is not high enough!!"
+      throw "Failed to initialize particle field: Epicness is not high enough!!"
     }
 
-    this.container = container;
+		// properties
+    self.container = container;
 
-    this.canvas = document.createElement('canvas');
-    this.ctx = this.canvas.getContext('2d');
+    self.canvas = document.createElement('canvas');
+    self.ctx = self.canvas.getContext('2d');
     
-    this.particles = [];
+    self.particles = [];
 
-    this.updateBounds();
-    this.createField();
-    this.drawEpicness();
 
-    onResize(this.updateBounds);
+		// abstract class methods
+		self.drawEpicness = drawEpicness;
+		self.updateBounds = updateBounds;
+
+
+		// initialize the particle field
+		self.init();
+
+		////////////////////////////////////////
+
+		/**
+		 * Update the bounds of the
+		 * canvas
+		 *
+		 */
+		function updateBounds() {
+			self.height = self.container.offsetHeight;
+			self.width = self.container.offsetWidth;
+		}
+
+
+		/**
+		 * Draw a frame on the canvas
+		 *
+		 */
+		function drawEpicness() {
+
+			self.ctx.fillStyle = 'mediumseagreen';
+			self.ctx.fillRect(0, 0, self.width, self.height);
+
+			let halfW = Math.floor(self.width / 2);
+			let halfH = Math.floor(self.height / 2);
+			self.ctx.fillStyle = 'white';
+			self.ctx.fillRect(
+				halfW - 50,
+				halfH - 50,
+				halfW + 50,
+				halfH + 50
+			);
+
+			window.requestAnimationFrame(self.drawEpicness);
+		}
   }
 
-  updateBounds() {
-    this.height = this.container.offsetHeight;
-    this.width  = this.container.offsetWidth;
-  }
 
+	/**
+	 * Initialize the particle field
+	 *
+	 */
+	init() {
+		this.updateBounds();
+		this.createField();
+		this.drawEpicness();
+
+		// update bounds on resize
+		// so responsive much wow
+		onResize(this.updateBounds);
+	}
+
+
+	/**
+	 * Create the canvas element on
+	 * the page and give it the
+	 * required styles
+	 *
+	 */
   createField() {
     let canvasStyles = {
       'position': 'absolute',
@@ -53,13 +128,6 @@ class ParticleField {
         setTimeout(() => this.canvas.style[property] = canvasStyles[property], 0);
       }
     }
-  }
-
-  drawEpicness() {
-    this.ctx.fillStyle = 'red';
-    this.ctx.fillRect(0,0,this.width, this.height);
-
-    window.requestAnimationFrame(this.drawEpicness);
   }
 }
 
