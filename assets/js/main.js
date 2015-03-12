@@ -1,17 +1,5 @@
+var ParticleField = require('./_particleField');
 
-
-
-var partial = require('./_partial');
-
-
-
-var { foo, bar } = {
-	foo: ['1', '2', '3'],
-	bar: { hello: 'World' },
-	baz: 'Oh, No!'
-};
-
-
-console.log(foo);
-console.log(bar);
-console.log(partial);
+// initialize the particle field
+var container = document.querySelector('[data-epicness-level]');
+new ParticleField(container);
