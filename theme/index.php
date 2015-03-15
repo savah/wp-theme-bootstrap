@@ -8,9 +8,9 @@
 ?>
 <?php get_header(); ?>
 
-<article class="hero" data-epicness-level="9001">
-	<div class="hero__content">
+<div class="hero" data-epicness-level="9001">
 
+	<article class="hero__content">
 		<header>
 			<h1>The Mozaik WordPress Theme Bootstrap</h1>
 		</header>
@@ -30,8 +30,8 @@
 				check out the README
 			</a>
 		</footer>
+	</article>
 
-	</div>
-</article>
+</div>
 
 <?php get_footer(); ?>
