@@ -98,6 +98,11 @@ class ParticleField {
       ////////// calculate stuff
 
       let dt = (time - self.previousFrame.time) / 1000; // in seconds
+      if (dt > 0.03) {
+        // safety net for when you leave
+        // the tab for a bit and come back
+        dt = 0.03;
+      }
 
       let cx = self.previousFrame.cx || self.canvas.height / 2;
       let cy = self.previousFrame.cy || self.canvas.width / 2;
