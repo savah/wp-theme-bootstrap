@@ -8,36 +8,36 @@ var Debouncer = require('./_debouncer');
  * @license MIT
  */
 class ParticleField {
-	/**
-	 * If the epicness level
-	 * is not over 9000... then
-	 * go home!
-	 *
-	 * just a demo of a static
-	 * function
-	 *
-	 * @param container
-	 * @returns {boolean}
-	 */
+  /**
+   * If the epicness level
+   * is not over 9000... then
+   * go home!
+   *
+   * just a demo of a static
+   * function
+   *
+   * @param container
+   * @returns {boolean}
+   */
   static epicnessHighEnough(container) {
     return container.dataset.epicnessLevel > 9000;
   }
 
 
-	/**
-	 * Kick off the particle field
-	 * if it's allowed...
-	 *
-	 * @param container
-	 */
+  /**
+   * Kick off the particle field
+   * if it's allowed...
+   *
+   * @param container
+   */
   constructor(container) {
-		var self = this;
+    var self = this;
     if (!ParticleField.epicnessHighEnough(container)) {
       throw "Failed to initialize particle field: Epicness is not high enough!!";
     }
 
 
-		// properties
+    // properties
     self.container = container;
     self.canvas = document.createElement('canvas');
 
@@ -45,13 +45,13 @@ class ParticleField {
     self.previousFrame = {};
 
 
-		// abstract class methods
-		self.drawEpicness = drawEpicness;
-		self.updateBounds = updateBounds;
-    self.updateMouse  = updateMouse;
+    // abstract class methods
+    self.drawEpicness = drawEpicness;
+    self.updateBounds = updateBounds;
+    self.updateMouse = updateMouse;
 
 
-		// initialize the particle field
+    // initialize the particle field
     this.updateBounds();
     this.createField();
     this.drawEpicness();
@@ -62,17 +62,17 @@ class ParticleField {
     // get mouse position on mousemove
     new Debouncer('mousemove').register(this.updateMouse);
 
-		////////////////////////////////////////
+    ////////////////////////////////////////
 
-		/**
-		 * Update the bounds of the
-		 * canvas
-		 *
-		 */
-		function updateBounds() {
+    /**
+     * Update the bounds of the
+     * canvas
+     *
+     */
+    function updateBounds() {
       self.canvas.height = self.container.offsetHeight;
-      self.canvas.width  = self.container.offsetWidth;
-		}
+      self.canvas.width = self.container.offsetWidth;
+    }
 
 
     /**
@@ -89,11 +89,11 @@ class ParticleField {
     }
 
 
-		/**
-		 * Draw a frame on the canvas
-		 *
-		 */
-		function drawEpicness(time) {
+    /**
+     * Draw a frame on the canvas
+     *
+     */
+    function drawEpicness(time) {
 
       ////////// calculate stuff
 
@@ -104,10 +104,10 @@ class ParticleField {
       let dx = self.mouse.x - cx;
       let dy = self.mouse.y - cy;
 
-      let m  = 0.25;
+      let m = 0.25;
 
-      let fx = 10*dx + 0.9*m*(self.previousFrame.ax || 0); // f = 10*x + 0.9*m*a
-      let fy = 10*dy + 0.9*m*(self.previousFrame.ay || 0);
+      let fx = 10 * dx + 0.9 * m * (self.previousFrame.ax || 0); // f = 10*x + 0.9*m*a
+      let fy = 10 * dy + 0.9 * m * (self.previousFrame.ay || 0);
 
       let ax = fx / m; // a = f/m
       let ay = fy / m;
@@ -120,26 +120,26 @@ class ParticleField {
       ///////// draw stuff
 
       self.ctx.globalCompositeOperation = 'lighter';
-      self.ctx.clearRect(0,0,self.canvas.width,self.canvas.height);
+      self.ctx.clearRect(0, 0, self.canvas.width, self.canvas.height);
 
       let radius = 50;
-			self.ctx.fillStyle = 'rgba(255,255,255,0.7)';
+      self.ctx.fillStyle = 'rgba(255,255,255,0.7)';
       self.ctx.beginPath();
-      self.ctx.arc(cx,cy,radius,0,Math.PI*2,true);
+      self.ctx.arc(cx, cy, radius, 0, Math.PI * 2, true);
       self.ctx.fill();
 
       ///////// do it all over again :)
       window.requestAnimationFrame(self.drawEpicness);
-		}
+    }
   }
 
 
-	/**
-	 * Create the canvas element on
-	 * the page and give it the
-	 * required styles
-	 *
-	 */
+  /**
+   * Create the canvas element on
+   * the page and give it the
+   * required styles
+   *
+   */
   createField() {
     let canvasStyles = {
       'position': 'absolute',
