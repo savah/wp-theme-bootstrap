@@ -1,5 +1,6 @@
-var ParticleField = require('./_particleField');
+import ParticleField from './_particleField';
+
+
 
 // initialize the particle field
-var container = document.querySelector('[data-epicness-level]');
-new ParticleField(container);
+new ParticleField(document.querySelector('[data-epicness-level]'));

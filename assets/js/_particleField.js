@@ -1,4 +1,4 @@
-var Debouncer = require('./_debouncer');
+import Debouncer from './_debouncer';
 
 /**
  * A field of
