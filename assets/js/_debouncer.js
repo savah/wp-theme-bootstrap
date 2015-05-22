@@ -8,16 +8,15 @@ class Debouncer {
    * Debounce handler on
    * a specific target
    *
-   * @param event
-   * @param target
+   * @param events string
+   * @param maybeTarget
    */
-  constructor(event, target) {
-    var self = this;
+  constructor(events, maybeTarget) {
+    let self = this;
+    let target = maybeTarget || window;
 
-    target = target || window;
-
-    if ('string' !== typeof event) {
-      throw "Debouncer: Debouncer can only debounce events of type string";
+    if ('string' !== typeof events) {
+      throw new Error('Debouncer: Debouncer can only debounce events of type string');
     }
 
     // properties
@@ -26,14 +25,14 @@ class Debouncer {
 
     // register listener
     if (window.addEventListener) {
-      target.addEventListener(event, bouncer, false);
+      target.addEventListener(events, bouncer, false);
     } else if (window.attachEvent) {
-      target.attachEvent(`on${event}`, bouncer);
+      target.attachEvent(`on${events}`, bouncer);
     } else {
-      target[`on${event}`] = bouncer;
+      target[`on${events}`] = bouncer;
     }
 
-    ///////////////////////////////
+    // /////////////////////////////
 
     /**
      * Run all attached callbacks
@@ -62,7 +61,7 @@ class Debouncer {
    */
   register(cb) {
     if ('function' !== typeof cb) {
-      throw "Debouncer: registered callback must be callable";
+      throw new Error('Debouncer: registered callback must be callable');
     }
     return this.callbacks.push(cb);
   }
@@ -79,7 +78,7 @@ class Debouncer {
    */
   deregister(cb) {
     if ('function' !== typeof cb) {
-      throw "Debouncer: registered callback must be callable";
+      throw new Error('Debouncer: registered callback must be callable');
     }
 
     let indexOfCb = this.callbacks.indexOf(cb);

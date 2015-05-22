@@ -9,4 +9,4 @@ class Particle {
   }
 }
 
-module.exports = Particle;
+export default Particle;

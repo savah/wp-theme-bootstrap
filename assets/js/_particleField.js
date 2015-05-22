@@ -20,7 +20,7 @@ class ParticleField {
    * @returns {boolean}
    */
   static epicnessHighEnough(container) {
-    return container.dataset.epicnessLevel > 9000;
+    return 9000 < container.dataset.epicnessLevel;
   }
 
 
@@ -31,11 +31,11 @@ class ParticleField {
    * @param container
    */
   constructor(container) {
-    var self = this;
-    if (!ParticleField.epicnessHighEnough(container)) {
-      throw "Failed to initialize particle field: Epicness is not high enough!!";
-    }
+    let self = this;
 
+    if (!ParticleField.epicnessHighEnough(container)) {
+      throw new Error('Failed to initialize particle field: Epicness is not high enough!!');
+    }
 
     // properties
     self.container = container;
@@ -62,7 +62,7 @@ class ParticleField {
     // get mouse position on mousemove
     new Debouncer('mousemove').register(this.updateMouse);
 
-    ////////////////////////////////////////
+    // //////////////////////////////////////
 
     /**
      * Update the bounds of the
@@ -94,11 +94,10 @@ class ParticleField {
      *
      */
     function drawEpicness(time) {
-
-      ////////// calculate stuff
+      // //////// calculate stuff
 
       let dt = (time - self.previousFrame.time) / 1000; // in seconds
-      if (dt > 0.03) {
+      if (0.03 < dt) {
         // safety net for when you leave
         // the tab for a bit and come back
         dt = 0.03;
@@ -122,7 +121,7 @@ class ParticleField {
 
       self.previousFrame = {time, cx, cy, ax, ay};
 
-      ///////// draw stuff
+      // /////// draw stuff
 
       self.ctx.globalCompositeOperation = 'lighter';
       self.ctx.clearRect(0, 0, self.canvas.width, self.canvas.height);
@@ -133,7 +132,7 @@ class ParticleField {
       self.ctx.arc(cx, cy, radius, 0, Math.PI * 2, true);
       self.ctx.fill();
 
-      ///////// do it all over again :)
+      // /////// do it all over again :)
       window.requestAnimationFrame(self.drawEpicness);
     }
   }
@@ -156,11 +155,13 @@ class ParticleField {
     };
 
     this.container.appendChild(this.canvas);
-    for (let property in canvasStyles) {
-      if (canvasStyles.hasOwnProperty(property)) {
-        setTimeout(() => this.canvas.style[property] = canvasStyles[property], 0);
+    setTimeout(() => {
+      for (let property in canvasStyles) {
+        if (canvasStyles.hasOwnProperty(property)) {
+          this.canvas.style[property] = canvasStyles[property];
+        }
       }
-    }
+    }, 0);
 
     this.ctx = this.canvas.getContext('2d');
   }
