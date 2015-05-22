@@ -6,9 +6,9 @@ var lodash       = require('lodash');
 var browserSync  = require('browser-sync');
 
 // utils
-var displayError = require('../../utils/displayError');
 var deepMerge    = require('../../utils/deepMerge');
-var notifaker    = require('../../utils/gulp-notifaker');
+var logStats     = require('../../utils/webpackLogStats');
+var notifaker    = require('../../utils/notifaker');
 var pumped       = require('../../utils/pumped');
 
 // config
@@ -25,7 +25,7 @@ var config       = require('../../config/scripts');
  */
 module.exports = function () {
 	return gulp.src(config.paths.src)
-		.pipe(plumber({ errorHandler: displayError }))
+		.pipe(plumber())
 
 		.pipe(named()) // vinyl-named is used to allow for
 									 // multiple entry files
@@ -35,11 +35,12 @@ module.exports = function () {
 				watch: true,
 				devtool: 'eval',
 				keepalive: true
-			}, deepMerge), null, function () {
+			}, deepMerge), null, function (err, stats) {
+				logStats(err, stats, { watch: true });
+
 				// reload browser-sync when
 				// a package is updated
 				browserSync.reload();
-
 				notifaker(pumped('JS Packaged'));
    	 	})
 		)
