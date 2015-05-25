@@ -15,9 +15,9 @@ class Debouncer {
 		let self = this;
 
 		// properties
-		self.target = target || window;
-		self.callbacks = [];
-		self.running = false;
+		self._target = target || window;
+		self._callbacks = [];
+		self._running = false;
 
 		self.addListeners(events);
 	}
@@ -39,14 +39,14 @@ class Debouncer {
 		self.events = self.events ? self.events.split(' ').concat(events.split(' ')).join(' ') : events;
 
 		if (window.addEventListener) {
-			self.target.addEventListener(events, self._bouncer.bind(self), false);
+			self._target.addEventListener(events, self._bouncer.bind(self), false);
 		} else {
 			let eventsList = events.split(' ').map(event => `on${event}`);
 
 			if (window.attachEvent) {
-				self.target.attachEvent(eventsList.join(' '), self._bouncer.bind(self));
+				self._target.attachEvent(eventsList.join(' '), self._bouncer.bind(self));
 			} else {
-				eventsList.forEach(event => self.target[event] = self._bouncer.bind(self));
+				eventsList.forEach(event => self._target[event] = self._bouncer.bind(self));
 			}
 		}
 	}
@@ -83,14 +83,14 @@ class Debouncer {
 		}
 
 		if (window.removeEventListener) {
-			self.target.removeEventListener(events, self._bouncer.bind(self), false);
+			self._target.removeEventListener(events, self._bouncer.bind(self), false);
 		} else {
 			let eventsList = events.split(' ').map(event => `on${event}`);
 
 			if (window.detachEvent) {
-				self.target.detachEvent(eventsList.join(' '), self._bouncer.bind(self));
+				self._target.detachEvent(eventsList.join(' '), self._bouncer.bind(self));
 			} else {
-				eventsList.forEach(event => self.target[event] = null);
+				eventsList.forEach(event => self._target[event] = null);
 			}
 		}
 	}
@@ -107,11 +107,11 @@ class Debouncer {
 	_bouncer(event) {
 		let self = this;
 
-		if (self.callbacks.length && !self.running) {
-			self.running = true;
+		if (self._callbacks.length && !self._running) {
+			self._running = true;
 			window.requestAnimationFrame(() => {
-				self.callbacks.forEach(cb => cb(event));
-				self.running = false;
+				self._callbacks.forEach(cb => cb(event));
+				self._running = false;
 			});
 		}
 	}
@@ -131,11 +131,11 @@ class Debouncer {
 			throw new TypeError('Debouncer: registered callback must be callable');
 		}
 
-		if (!self.callbacks.length) {
+		if (!self._callbacks.length) {
 			self.addListeners(self.events);
 		}
 
-		return self.callbacks.push(callback);
+		return self._callbacks.push(callback);
 	}
 
 
@@ -155,12 +155,12 @@ class Debouncer {
 			throw new TypeError('Debouncer: registered callback must be callable');
 		}
 
-		let indexOfCb = self.callbacks.indexOf(callback);
+		let indexOfCb = self._callbacks.indexOf(callback);
 		if (-1 < indexOfCb) {
-			self.callbacks.splice(indexOfCb, 1);
+			self._callbacks.splice(indexOfCb, 1);
 		}
 
-		if (!self.callbacks.length) {
+		if (!self._callbacks.length) {
 			self.removeListeners(self.events);
 		}
 
