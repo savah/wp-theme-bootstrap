@@ -4,7 +4,7 @@
  */
 class Debouncer {
 	/**
-	 * Register an events
+	 * Register an event
 	 * Debounce handler on
 	 * a specific target
 	 *
