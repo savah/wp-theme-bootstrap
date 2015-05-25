@@ -36,7 +36,7 @@ class Debouncer {
 			throw new TypeError('Debouncer: Debouncer can only debounce events of type string');
 		}
 
-		self.events = self.events ? self.events.split(' ').concat(events.split(' ')).join(' ') : events;
+		self._events = self._events ? self._events.split(' ').concat(events.split(' ')).join(' ') : events;
 
 		if (window.addEventListener) {
 			self._target.addEventListener(events, self._bouncer.bind(self), false);
@@ -70,7 +70,7 @@ class Debouncer {
 			// if hard option enabled then remove
 			// the events from the "events" property
 			// of the Debouncer
-			let registered = self.events.split(' ');
+			let registered = self._events.split(' ');
 
 			events.split(' ').forEach(event => {
 				let indexOfEvent = registered.indexOf(event);
@@ -79,7 +79,7 @@ class Debouncer {
 				}
 			});
 
-			self.events = registered.join(' ');
+			self._events = registered.join(' ');
 		}
 
 		if (window.removeEventListener) {
@@ -107,7 +107,7 @@ class Debouncer {
 	_bouncer(event) {
 		let self = this;
 
-		if (self._callbacks.length && !self._running) {
+		if (!self._running && self._callbacks.length) {
 			self._running = true;
 			window.requestAnimationFrame(() => {
 				self._callbacks.forEach(cb => cb(event));
@@ -132,7 +132,7 @@ class Debouncer {
 		}
 
 		if (!self._callbacks.length) {
-			self.addListeners(self.events);
+			self.addListeners(self._events);
 		}
 
 		return self._callbacks.push(callback);
@@ -161,7 +161,7 @@ class Debouncer {
 		}
 
 		if (!self._callbacks.length) {
-			self.removeListeners(self.events);
+			self.removeListeners(self._events);
 		}
 
 		return indexOfCb;
